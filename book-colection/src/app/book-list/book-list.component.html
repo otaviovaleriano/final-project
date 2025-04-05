@@ -3,6 +3,7 @@
     <table class="table table-bordered">
       <thead>
         <tr>
+          <th>Book</th>
           <th>Title</th>
           <th>Author</th>
           <th>Genre</th>
@@ -13,11 +14,13 @@
       </thead>
       <tbody>
         <tr *ngFor="let book of books">
+          <td><img [src]="book.coverImageUrl" alt="{{ book.title }}" class="img-responsive" style="max-height: 300px;"></td>
           <td>{{ book.title }}</td>
           <td>{{ book.author }}</td>
           <td>{{ book.genre }}</td>
           <td>{{ book.publishedYear }}</td>
           <td>{{ book.description }}</td>
+          
           <td>
             <button class="btn btn-warning" [routerLink]="['/edit', book._id]">Edit</button>
             <button class="btn btn-danger" (click)="deleteBook(book._id)">Delete</button>
