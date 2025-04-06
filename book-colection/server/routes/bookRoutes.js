@@ -1,18 +1,38 @@
 const express = require('express');
 const router = express.Router();
-const Book = require('../models/book'); // Import the Book model
+const Book = require('../models/book');
 
 // Get all books
 router.get('/', async (req, res) => {
+  const { filterBy, searchTerm, sortBy } = req.query;
+
+  if (!filterBy || !searchTerm) {
+    try {
+      const books = await Book.find();
+      return res.status(200).json(books);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching books', error });
+    }
+  }
+
+  const query = {};
+  query[filterBy] = { $regex: searchTerm, $options: 'i' }; 
+
   try {
-    const books = await Book.find();
+    let books;
+    if (sortBy) {
+      books = await Book.find(query).sort({ [sortBy]: 1 }); 
+    } else {
+      books = await Book.find(query);
+    }
+
     res.status(200).json(books);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching books', error });
   }
 });
 
-// GET a specific book by _id (default MongoDB field)
+// GET a specific book by _id
 router.get('/:id', async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
@@ -46,7 +66,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Update an existing book
+// Update a book
 router.put('/:id', async (req, res) => {
   const { title, author, genre, publishedYear, description, coverImageUrl } = req.body;
 

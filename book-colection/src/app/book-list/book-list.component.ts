@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-book-list',
@@ -9,20 +10,35 @@ import { BookService } from '../services/book.service';
 })
 export class BookListComponent implements OnInit {
   books: any[] = [];
-  // static imports = [CommonModule];
   selectedBook: any = null;
   modalVisible: boolean = false;
+
+  filterBy: string = 'title';
+  searchTerm: string = '';
+
+  private searchTermSubject: Subject<string> = new Subject<string>();
 
   constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
     this.getBooks();
+
+    this.searchTermSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged() 
+    ).subscribe(searchTerm => {
+      this.getBooks(searchTerm);
+    });
   }
 
-  getBooks(): void {
-    this.bookService.getBooks().subscribe(books => {
+  getBooks(searchTerm: string = ''): void {
+    this.bookService.getBooks(this.filterBy, searchTerm).subscribe((books) => {
       this.books = books;
     });
+  }
+
+  onSearchTermChange(searchTerm: string): void {
+    this.searchTermSubject.next(searchTerm);
   }
 
   deleteBook(id: string): void {

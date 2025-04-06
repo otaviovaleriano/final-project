@@ -20,7 +20,6 @@ export class BookFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Check if it's editing an existing book
     const bookId = this.route.snapshot.paramMap.get('id');
     if (bookId) {
       this.isEditMode = true;

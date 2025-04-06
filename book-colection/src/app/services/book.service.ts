@@ -11,8 +11,10 @@ export class BookService {
   constructor(private http: HttpClient) {}
 
   // Get all books
-  getBooks(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getBooks(filterBy: string, searchTerm: string): Observable<any[]> {
+    let queryParams = `?filterBy=${filterBy}&searchTerm=${searchTerm}`;
+
+    return this.http.get<any[]>(`${this.apiUrl}${queryParams}`);
   }
 
   // Add a new book
@@ -20,7 +22,7 @@ export class BookService {
     return this.http.post<any>(this.apiUrl, book);
   }
 
-  // Update an existing book
+  // Update a specific book
   updateBook(id: string, book: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, book);
   }

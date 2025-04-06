@@ -1,10 +1,34 @@
 <div class="container">
   <h2>Book Collection</h2>
 
+  <!-- filter div -->
+  <div class="d-flex align-items-center mb-3">
+    <div class="mr-2" style="flex: 1 1 30%; max-width: 250px; margin-top: 10px;">
+      <label for="filterBy">Filter By</label>
+      <select id="filterBy" class="form-control" [(ngModel)]="filterBy" (change)="getBooks(searchTerm)">
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+        <option value="genre">Genre</option>
+      </select>
+    </div>
+    <div style="flex: 2 1 60%; max-width: 250px; margin-top: 10px;">
+      <label for="searchTerm">Search</label>
+      <input
+        id="searchTerm"
+        type="text"
+        class="form-control"
+        placeholder="Search..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchTermChange($event)" />
+    </div>
+  </div>
+
+    <!-- book-collection -->
   <div class="row">
     <div *ngFor="let book of books" class="col-md-4">
       <div class="card" (click)="openModal(book)">
-        <img [src]="book.coverImageUrl" class="card-img-top" alt="{{ book.title }}" />
+        <img [src]="book.coverImageUrl" class="card-img-top"
+          alt="{{ book.title }}" />
         <div class="card-body">
           <h5 class="card-title">{{ book.title }}</h5>
         </div>
@@ -17,20 +41,25 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <img [src]="selectedBook?.coverImageUrl" class="card-img-top" alt="{{ selectedBook?.title }}" /> 
+          <img [src]="selectedBook?.coverImageUrl" class="card-img-top"
+            alt="{{ selectedBook?.title }}" />
         </div>
         <div class="modal-body">
           <h4 class="modal-title">Title: {{ selectedBook?.title }}</h4>
           <br>
           <p><strong>Author:</strong> {{ selectedBook?.author }}</p>
           <p><strong>Genre:</strong> {{ selectedBook?.genre }}</p>
-          <p><strong>Published Year:</strong> {{ selectedBook?.publishedYear }}</p>
+          <p><strong>Published Year:</strong> {{ selectedBook?.publishedYear
+            }}</p>
           <p><strong>Description:</strong> {{ selectedBook?.description }}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-warning" [routerLink]="['/edit', selectedBook?._id]">Edit</button>
-          <button type="button" class="btn btn-danger" (click)="deleteBook(selectedBook?._id)">Delete</button>
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+          <button type="button" class="btn btn-warning"
+            [routerLink]="['/edit', selectedBook?._id]">Edit</button>
+          <button type="button" class="btn btn-danger"
+            (click)="deleteBook(selectedBook?._id)">Delete</button>
+          <button type="button" class="btn btn-secondary"
+            (click)="closeModal()">Close</button>
         </div>
       </div>
     </div>
