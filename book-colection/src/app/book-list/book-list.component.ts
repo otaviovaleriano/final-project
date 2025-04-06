@@ -10,6 +10,8 @@ import { BookService } from '../services/book.service';
 export class BookListComponent implements OnInit {
   books: any[] = [];
   // static imports = [CommonModule];
+  selectedBook: any = null;
+  modalVisible: boolean = false;
 
   constructor(private bookService: BookService) {}
 
@@ -27,5 +29,15 @@ export class BookListComponent implements OnInit {
     this.bookService.deleteBook(id).subscribe(() => {
       this.getBooks();
     });
+  }
+
+    openModal(book: any): void {
+    this.selectedBook = book;
+    this.modalVisible = true;
+  }
+
+  closeModal(): void {
+    this.modalVisible = false;
+    this.selectedBook = null;
   }
 }
